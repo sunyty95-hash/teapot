@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Teapot View</title>
+
+<style>
+	.slidecontainer {
+  width: 100%; /* Width of the outside container */
+}
+	.slider {
+		width: 100%;
+	}
+</style>
+
+<script type="text/javascript" src="./common_files/utils.js"></script>
+<script type="text/javascript" src="./common_files/initShaders.js"></script>
+<script type="text/javascript" src="./common_files/mat_vec.js"></script>
+<script type="text/javascript" src="./xform2.js"></script>
+<script type="text/javascript" src="./teapot.js"></script>
+<script type="text/javascript" src="./teapotTransform.js"></script>
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec3 vPosition;
+attribute vec3 vColor;
+varying vec4 color;
+
+uniform mat4 M_model;
+uniform mat4 M_Camera;
+uniform mat4 M_Persp;
+
+void main() {
+	gl_Position = M_Persp * M_Camera * M_model * vec4(vPosition, 1.);
+	color = vec4(vColor, 1.);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying vec4 color;
+
+void main() {
+	gl_FragColor = color;
+}
+</script>
+
+
+</head>
+<body>
+<div style="float:left">
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<p>Light Source Position</p>
+
+<div style="margin-top: 20px;">
+	Window width (0.1 - 30.0):
+	<div class="slidecontainer">
+		<input type="range" min="0.1" max="30.0" value="5.0" class="slider" id="window_width" step="0.1">
+	</div>
+
+<div style="margin-top: 20px;">
+	Window height (0.1 - 30.0):
+	<div class="slidecontainer">
+		<input type="range" min="0.1" max="30.0" value="5.0" class="slider" id="window_height" step="0.1">
+	</div>
+</div>
+
+<div style="margin-top: 20px;">
+	Near Clipping Plane (0.1 - 200):
+	<div class="slidecontainer">
+		<input type="range" min="0.1" max="200" value="6" class="slider" id="near" step="0.1">
+		<p>Near value: <span id="near_value">6.0</span></p>
+	</div>
+</div>
+
+<div style="margin-top: 20px;">
+	Far Clipping Plane (300 - 0.1):
+	<div class="slidecontainer">
+		<input type="range" min="0.1" max="300" value="300" class="slider" id="far" step="0.1">
+	</div>
+</div>
+
+<div style="margin-top: 20px;">
+	Rotate (X,Y,Z): (-90 - +90)
+	<div class="slidecontainer">
+		<input type="range" min="-90" max="90" value="0" class="slider" id="x-rotate" step="0.1">
+		<input type="range" min="-90" max="90" value="0" class="slider" id="y-rotate" step="0.1">
+		<input type="range" min="-90" max="90" value="0" class="slider" id="z-rotate" step="0.1">
+	</div>
+</div>
+
+<script>
+    const slider = document.getElementById("near");
+    const nearValue = document.getElementById("near_value");
+
+    // Update the current height value displayed
+    slider.addEventListener("input", function() {
+        nearValue.textContent = this.value;
+    });
+</script>
+
+
+</body>
+
+
+</html>
